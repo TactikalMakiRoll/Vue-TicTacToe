@@ -5,6 +5,9 @@
       <h2 class="options__description">
         A simple Tic Tac Toe app build with Vue 3 Composition API
       </h2>
+      <h2 class="options__description">
+        Get a victory or tie to win!    
+      </h2>
       <h2 class="options__choose">
         Choose the number of cells
       </h2>
