@@ -2,8 +2,8 @@
     <div class="game">
         <div :style="fieldStyle " class="field">
             <div ref="fieldArr" @click="makeMove(cellNum)" v-for="cellNum in field_size*field_size" :key="cellNum" class="field__cell">
-                <img v-if="fieldArray[cellNum] === 'x'" src="../assets/icons8-multiply-80.png" alt="X">
-                <img v-if="fieldArray[cellNum] === 'o'" src="../assets/icons8-o-80.png" alt="O">
+                <img class="field__icon" v-if="fieldArray[Math.floor(cellNum/field_size)][cellNum%field_size] === 'o'" src="../assets/icons8-o-80.png" alt="O">
+                <img class="field__icon" v-if="fieldArray[Math.floor(cellNum/field_size)][cellNum%field_size] === 'x'" src="../assets/icons8-multiply-80.png" alt="X">
             </div>
         </div>
     </div>
@@ -14,8 +14,7 @@ import {ref, defineProps, onMounted, computed} from "vue";
 
 const props = defineProps(["field_size"]);
 
-let fieldArray = ref(null);
-fieldArray.value = [];  
+let fieldArray = ref([[],[],[],[],[],[],[],[]]);  
 
 const fieldStyle = computed(() => {
     let cellsFr = "1fr ".repeat(props.field_size);
@@ -25,9 +24,41 @@ const fieldStyle = computed(() => {
 
 const fieldArr = ref();
 
-const makeMove = function(cellNumber){
-    cellNumber;
+
+const checkWin = function(){
+    let finished = true;
+    for(let i=0;i<props.field_size;i++){
+        for(let j=0;j<props.field_size;j++){
+            if(fieldArray.value[i][j]===undefined){
+                finished = false;
+                break;
+            }
+        }
+    }
+    return finished;
 }
+
+const botMove = function(){
+    if(!checkWin()){
+        let x = Math.floor(Math.random()*props.field_size);
+        let y = Math.floor(Math.random()*props.field_size);
+        while(fieldArray.value[x][y]!==undefined){
+            x = Math.floor(Math.random()*props.field_size);
+            y = Math.floor(Math.random()*props.field_size);
+        }
+        console.log("x,y\n" + x + " " + y)
+        fieldArray.value[x][y] = 'o';
+    }
+}
+
+const makeMove = function(cellNumber){
+    if(fieldArray.value[Math.floor(cellNumber/props.field_size)][cellNumber%props.field_size]===undefined){
+        fieldArray.value[Math.floor(cellNumber/props.field_size)][cellNumber%props.field_size] = 'x';
+        console.log("somebody, make a move");
+        botMove();
+    }
+}
+
 
 
 onMounted(()=>{
@@ -46,7 +77,7 @@ onMounted(()=>{
     }
     .field{
         display: grid;
-        min-width: calc(12rem + 8px);
+        min-width: calc(12rem + 16px);
         max-width: min(50vw,75vh);
         aspect-ratio: 1;
         margin: 0 auto;
@@ -54,12 +85,20 @@ onMounted(()=>{
         border: 4px dashed white;
     }
     .field__cell{
-        border: 2px solid white;
         width: 100%;
         height: 100%; 
         min-width:4rem;
         min-height:4rem;
         aspect-ratio: 1;
         object-fit: fill;
+        border: 4px solid rgb(43, 1, 82);
+        background-color: rgb(209, 209, 209);
+    }
+    .field__cell:empty:hover{
+        cursor:pointer;
+    }
+    .field__icon{
+        width: 100%;
+        height:100%;
     }
 </style>
