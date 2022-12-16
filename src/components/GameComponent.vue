@@ -1,9 +1,10 @@
 <template>
     <div class="game">
         <div :style="fieldStyle " class="field">
-            <div ref="fieldArr" @click="makeMove(cellNum)" v-for="cellNum in field_size*field_size" :key="cellNum" class="field__cell">
-                <img class="field__icon" v-if="fieldArray[Math.floor(cellNum/field_size)][cellNum%field_size] === 'o'" src="../assets/icons8-o-80.png" alt="O">
-                <img class="field__icon" v-if="fieldArray[Math.floor(cellNum/field_size)][cellNum%field_size] === 'x'" src="../assets/icons8-multiply-80.png" alt="X">
+            <div ref="fieldArr" @click="makeMove(cellNum-1)" v-for="cellNum in field_size*field_size" :key="cellNum" class="field__cell">
+                <img class="field__icon" v-if="fieldArray[Math.floor((cellNum-1)/field_size)][(cellNum-1)%field_size] === 'o'" src="../assets/icons8-o-80.png" alt="O">
+                <img class="field__icon" v-if="fieldArray[Math.floor((cellNum-1)/field_size)][(cellNum-1)%field_size] === 'x'" src="../assets/icons8-multiply-80.png" alt="X">
+                <!-- {{fieldArray[Math.floor((cellNum-1)/field_size)][(cellNum-1)%field_size]}} -->
             </div>
         </div>
     </div>
@@ -55,6 +56,7 @@ const makeMove = function(cellNumber){
     if(fieldArray.value[Math.floor(cellNumber/props.field_size)][cellNumber%props.field_size]===undefined){
         fieldArray.value[Math.floor(cellNumber/props.field_size)][cellNumber%props.field_size] = 'x';
         console.log("somebody, make a move");
+        console.log(fieldArray.value);
         botMove();
     }
 }
@@ -76,29 +78,25 @@ onMounted(()=>{
         padding:2rem 0;
     }
     .field{
-        display: grid;
-        min-width: calc(12rem + 16px);
-        max-width: min(50vw,75vh);
+        display: inline-grid;
         aspect-ratio: 1;
         margin: 0 auto;
-
         border: 4px dashed white;
     }
     .field__cell{
-        width: 100%;
-        height: 100%; 
-        min-width:4rem;
-        min-height:4rem;
+        min-width:4.5rem;
+        min-height:4.5rem;
         aspect-ratio: 1;
         object-fit: fill;
         border: 4px solid rgb(43, 1, 82);
         background-color: rgb(209, 209, 209);
+        color:black;
+        font-size:2em;
     }
     .field__cell:empty:hover{
         cursor:pointer;
     }
     .field__icon{
-        width: 100%;
-        height:100%;
+        width: 4rem;
     }
 </style>
